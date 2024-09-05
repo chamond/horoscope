@@ -1,8 +1,12 @@
+from random import randint
+
 from telegram import Update, Bot
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 
 from secrets import BOT_TOKEN
 from database import getPredict, addExpression
+
+import random
 
 # Команда /start
 async def predict(update: Update, context) -> None:
@@ -31,6 +35,16 @@ async def add(update: Update, context) -> None:
         return
     await update.message.reply_text('Спасибо, добавлено: ' + str(list(map(str.strip, structure))))
 
+def generate_random_integer(start, end):
+    return random.randint(start, end)
+
+async def dices(update: Update, context) -> None:
+    sum = 0
+    for i in range(100):
+        sum += randint(1, 6)
+    await update.message.reply_text(f'Я ставлю, что выпадет: {sum}')
+
+
 # Основной блок
 if __name__ == '__main__':
     # Создаем приложение
@@ -39,6 +53,7 @@ if __name__ == '__main__':
     # Добавляем обработчики команд и сообщений
     application.add_handler(CommandHandler('predict', predict))
     application.add_handler(CommandHandler('addPrediction', add))
+    application.add_handler(CommandHandler('dices', dices))
 
     # Запускаем бота
     application.run_polling()
