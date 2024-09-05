@@ -1,4 +1,5 @@
 import sqlite3
+import random
 
 connection = sqlite3.connect('database.db')
 cursor = connection.cursor()
@@ -16,8 +17,33 @@ cursor.execute('''DELETE FROM vocabulary WHERE rowid NOT IN (SELECT MIN(rowid) F
 # Закрываем соединение и сохраняем изменения
 connection.commit()
 
-def getPredict():
-    adjective = cursor.execute('SELECT value FROM vocabulary WHERE type = "adjective" ORDER BY RANDOM() LIMIT 1').fetchone()[0]
-    noun = cursor.execute('SELECT value FROM vocabulary WHERE type = "noun" ORDER BY RANDOM() LIMIT 1').fetchone()[0]
-    verb = cursor.execute('SELECT value FROM vocabulary WHERE type = "verb" ORDER BY RANDOM() LIMIT 1').fetchone()[0]
+def get_prediction_store():
+    cursor.execute('SELECT value FROM vocabulary WHERE type = "adjective"')
+    result = cursor.fetchall()
+    adjectives = [row[0] for row in result]
+
+    cursor.execute('SELECT value FROM vocabulary WHERE type = "noun"')
+    result = cursor.fetchall()
+    nouns = [row[0] for row in result]
+
+    cursor.execute('SELECT value FROM vocabulary WHERE type = "verb"')
+    result = cursor.fetchall()
+    verbs = [row[0] for row in result]
+
+    return [adjectives, nouns, verbs]
+
+
+def getPredict(store):
+    index = random.randint(0, len(store[0]) - 1)
+    adjective = store[0][index]
+    store[0].pop(index)
+
+    index = random.randint(0, len(store[1]) - 1)
+    noun = store[1][index]
+    store[1].pop(index)
+
+    index = random.randint(0, len(store[2]) - 1)
+    verb = store[2][index]
+    store[2].pop(index)
+
     return adjective + ' ' + noun + ' ' + verb
