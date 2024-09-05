@@ -1,16 +1,27 @@
-# This is a sample Python script.
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from secrets import BOT_TOKEN
 
+# Используй Heroku
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+# Команда /start
+async def start(update: Update, context) -> None:
+    await update.message.reply_text('Привет! Я Telegram-бот. Напиши мне что-нибудь.')
 
+# Ответ на обычные сообщения
+async def echo(update: Update, context) -> None:
+    received_text = update.message.text
+    await update.message.reply_text(f'Ты написал: {received_text}')
 
-# Press the green button in the gutter to run the script.
+# Основной блок
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    # Создаем приложение
+    application = ApplicationBuilder().token(BOT_TOKEN).build()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    # Добавляем обработчики команд и сообщений
+    application.add_handler(CommandHandler('start', start))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+
+    # Запускаем бота
+    application.run_polling()
