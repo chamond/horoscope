@@ -29,6 +29,7 @@ async def add(update: Update, context) -> None:
     except IndexError:
         await update.message.reply_text('Бро, дай мне действие')
         return
+    await update.message.reply_text('Спасибо, добавлено: ' + str(list(map(str.strip, structure))))
 
 # Основной блок
 if __name__ == '__main__':

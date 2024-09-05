@@ -20,4 +20,4 @@ def getPredict():
     adjective = cursor.execute('SELECT value FROM vocabulary WHERE type = "adjective" ORDER BY RANDOM() LIMIT 1').fetchone()[0]
     noun = cursor.execute('SELECT value FROM vocabulary WHERE type = "noun" ORDER BY RANDOM() LIMIT 1').fetchone()[0]
     verb = cursor.execute('SELECT value FROM vocabulary WHERE type = "verb" ORDER BY RANDOM() LIMIT 1').fetchone()[0]
-    return adjective + ' ' + noun.lower() + ' ' + verb.lower()
+    return adjective + ' ' + noun + ' ' + verb
